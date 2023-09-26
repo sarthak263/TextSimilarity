@@ -1,7 +1,9 @@
+from nltk import corpus
+
 from logAnalyzier import *
 
 
-
+'''
 def simple_textSearch():
     string_pattern = r"Hi my name is \w+"
 
@@ -21,14 +23,19 @@ def transformer_textSearch():
 
     print(f"Total time taken: {end_time - start_time} seconds")
     print("Scores:", scores)
-
+'''
 
 if __name__ == '__main__':
     target_sentences = [
-        "What's your name?",
-        "How old are you?",
-        # ... add all 40 sentences here
+        "Is it ok to text you on your mobile number?",
+        "In order to serve you better, I'm going to ask you a few questions to verify your identity and get us on the way to your solution",
     ]
-    log_files = ["test.txt"]
-    analyzer = LogAnalyzer(target_sentences)
-    simple_textSearch()
+    log_analyzer = LogAnalyzer(target_sentences=target_sentences)
+    log_file_path = "test.txt"
+
+    matched_question = log_analyzer.process_log_file(log_file_path)
+
+    score = log_analyzer.process_log_file(log_file_path)
+    print(score)
+
+    #print(f"The number of similar questions found in {log_file_path} is {score}")

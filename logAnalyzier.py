@@ -1,3 +1,4 @@
+import torch
 from sentence_transformers import SentenceTransformer, util
 import numpy as np
 import concurrent.futures
@@ -22,8 +23,17 @@ class LogAnalyzer:
             lines = f.readlines()
 
         line_embeddings = self.model.encode(lines, convert_to_tensor=True).cpu().numpy()
-        similarities = np.inner(line_embeddings, self.target_embeddings)
-        score = np.sum(np.any(similarities > self.threshold, axis=1))
+        #similarities = np.inner(line_embeddings, self.target_embeddings)
+        score = 0
+
+        for line, line_embedding in zip(lines,line_embeddings):
+            hits = util.semantic_search(line_embedding,self.target_embeddings,top_k=1)[0][0]
+            print(hits)
+            if hits['score'] >0.75:
+                score+=1
+        #score = np.sum(np.any(similarities > self.threshold, axis=1))
+
+
 
         end_time = time.time()
         print(f"Time taken to process {log_file_path}: {end_time - start_time} seconds")
@@ -46,5 +56,24 @@ class LogAnalyzer:
     def process_files_with_string_match(self, pattern, file_paths):
         with concurrent.futures.ThreadPoolExecutor() as executor:
             scores = list(executor.map(lambda x: self.simple_string_match(pattern, x), file_paths))
+        return scores
+
+
+    #bard
+    def process_files(self, file_paths, embeddings=True):
+        scores = []
+        for file_path in file_paths:
+            with open(file_path, 'r') as f:
+                lines = f.readlines()
+
+            if embeddings:
+                line_embeddings = self.model.encode(lines, convert_to_tensor=True).cpu().numpy()
+                similarities = np.inner(line_embeddings, self.target_embeddings)
+                score = np.sum(np.any(similarities > self.threshold, axis=1))
+            else:
+                score = self.simple_string_match(self.target_sentences[0], file_path)
+
+            scores.append(score)
+
         return scores
 
