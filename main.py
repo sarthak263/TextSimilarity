@@ -29,11 +29,15 @@ if __name__ == '__main__':
     target_sentences = [
         "Is it ok to text you on your mobile number?",
         "In order to serve you better, I'm going to ask you a few questions to verify your identity and get us on the way to your solution",
+        r"My name is [name]. I will be helping you today.",
+        "Would you like to proceed with enrolling in [plan name] today",
+
     ]
     log_analyzer = LogAnalyzer(target_sentences=target_sentences)
     log_file_path = "test.txt"
 
-    score = log_analyzer.process_log_file(log_file_path)
-    print(score)
+    #score = log_analyzer.process_log_file(log_file_path)
+    score, log_name = log_analyzer.process_log_file(log_file_path)
+    print(score, log_name)
 
     #print(f"The number of similar questions found in {log_file_path} is {score}")
