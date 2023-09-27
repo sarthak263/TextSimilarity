@@ -1,4 +1,4 @@
-My system requires me to ask whether this is a mobile number, and if it's okay to call or text you on your mobile number?
-Hello World
-can we text you on your mobile phone?
-I am going to ask you few questions to verify your identity
+8/17/2023 4:056:25 PM: Speaker Guest-1 => My system requires me to ask whether this is a mobile number, and if it's okay to call or text you on your mobile number?
+8/17/2023 4:057:25 PM: Speaker Guest-2 => Hello World
+8/17/2023 4:058:25 PM: Speaker Guest-1 => can we text you on your mobile phone? Please let me know once you have the results ready for us.
+8/17/2023 4:058:25 PM: Speaker Guest-1 => Do you want me to enroll you in HMO plan today?
