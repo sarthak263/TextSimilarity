@@ -5,9 +5,10 @@ import concurrent.futures
 import re
 import time
 
+modelName = ["multi-qa-MiniLM-L6-dot-v1",'paraphrase-MiniLM-L6-v2']
 
 class LogAnalyzer:
-    def __init__(self, target_sentences, model_name='paraphrase-MiniLM-L6-v2', threshold=0.8):
+    def __init__(self, target_sentences, model_name=modelName[0], threshold=0.8):
         self.model = SentenceTransformer(model_name)
         self.target_sentences = target_sentences
         self.target_embeddings = self._precompute_embeddings(target_sentences)
@@ -30,18 +31,15 @@ class LogAnalyzer:
 
         for line, target in zip(self.target_sentences,self.target_embeddings):
             hits = util.semantic_search(target,line_embeddings,top_k=1)[0][0]
-
-            if hits['score'] >0.75:
+            if round(hits['score'],2) >=0.80:
                 print(line)
                 score+=1
         #score = np.sum(np.any(similarities > self.threshold, axis=1))
 
-
-
         end_time = time.time()
         print(f"Time taken to process {log_file_path}: {end_time - start_time} seconds")
 
-        return score
+        return score, log_file_path
 
     def process_multiple_files(self, file_paths):
         with concurrent.futures.ThreadPoolExecutor() as executor:
