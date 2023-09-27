@@ -33,8 +33,6 @@ if __name__ == '__main__':
     log_analyzer = LogAnalyzer(target_sentences=target_sentences)
     log_file_path = "test.txt"
 
-    matched_question = log_analyzer.process_log_file(log_file_path)
-
     score = log_analyzer.process_log_file(log_file_path)
     print(score)
 
