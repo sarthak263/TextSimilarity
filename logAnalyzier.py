@@ -22,14 +22,17 @@ class LogAnalyzer:
         with open(log_file_path, 'r') as f:
             lines = f.readlines()
 
+        lines = new_list = [item.split("=>")[1].strip() if "=>" in item else item for item in lines]
+
         line_embeddings = self.model.encode(lines, convert_to_tensor=True).cpu().numpy()
         #similarities = np.inner(line_embeddings, self.target_embeddings)
         score = 0
 
-        for line, line_embedding in zip(lines,line_embeddings):
-            hits = util.semantic_search(line_embedding,self.target_embeddings,top_k=1)[0][0]
-            print(hits)
+        for line, target in zip(self.target_sentences,self.target_embeddings):
+            hits = util.semantic_search(target,line_embeddings,top_k=1)[0][0]
+
             if hits['score'] >0.75:
+                print(line)
                 score+=1
         #score = np.sum(np.any(similarities > self.threshold, axis=1))
 
