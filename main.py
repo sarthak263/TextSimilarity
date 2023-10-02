@@ -1,43 +1,38 @@
 from nltk import corpus
-
+import time
 from logAnalyzier import *
+import pandas as pd
+from CheckPoints import CheckPointsEnum
+import csv
 
+def Transform_To_CSV(data, csv_filename="output.csv"):
+    # Convert the list of dictionaries to list of lists for csv writer
+    rows = []
+    for item in data:
+        for file_name, checkpoints in item.items():
+            row = [file_name]
+            row.extend([checkpoints[f'CP{i}'] for i in range(1, 7)])
+            row.append(sum(row[1:7]))
+            rows.append(row)
 
-'''
-def simple_textSearch():
-    string_pattern = r"Hi my name is \w+"
-
-    start_time = time.time()
-    string_match_scores = analyzer.process_files_with_string_match(string_pattern, log_files)
-    end_time = time.time()
-
-    print(f"Total time taken for string match: {end_time - start_time} seconds")
-    print("String Match Scores:", string_match_scores)
-
-def transformer_textSearch():
-    # List all log files (assuming they are in the folder 'log_files')
-
-    start_time = time.time()
-    scores = analyzer.process_multiple_files(log_files)
-    end_time = time.time()
-
-    print(f"Total time taken: {end_time - start_time} seconds")
-    print("Scores:", scores)
-'''
+    # Write to CSV
+    with open(csv_filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        # Write header
+        writer.writerow(['File Name', 'Checkpoint 1', 'Checkpoint 2', 'Checkpoint 3', 'Checkpoint 4', 'Checkpoint 5', 'Checkpoint 6', 'Total Score'])
+        # Write rows
+        writer.writerows(rows)
 
 if __name__ == '__main__':
-    target_sentences = [
-        "Is it ok to text you on your mobile number?",
-        "In order to serve you better, I'm going to ask you a few questions to verify your identity and get us on the way to your solution",
-        r"My name is [name]. I will be helping you today.",
-        "Would you like to proceed with enrolling in [plan name] today",
 
-    ]
-    log_analyzer = LogAnalyzer(target_sentences=target_sentences)
-    log_file_path = "test.txt"
 
-    #score = log_analyzer.process_log_file(log_file_path)
-    score, log_name = log_analyzer.process_log_file(log_file_path)
-    print(score, log_name)
+    log_analyzer = LogAnalyzer()
+    log_file_path = ["sample1_logs.txt","test.txt","test2.txt"]
 
-    #print(f"The number of similar questions found in {log_file_path} is {score}")
+    start_time = time.time()
+    res = log_analyzer.process_multiple_files(log_file_path)
+    end_time = time.time()
+    print(f"Time taken to process {log_file_path}: {end_time - start_time} seconds")
+    print(res)
+    Transform_To_CSV(res)
+
